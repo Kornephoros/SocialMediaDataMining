@@ -32,41 +32,28 @@ print "This post is a " + post['type']
 # And this prints information about the post. This post is a video, so it prints "Length 0:14"
 for information in post['properties']:
     print " ".join(information.values())
-# This for loop will iterate through the post buffer received from Facebook.
-for liker in likes_from_post:
-    try:
-        print liker['id'] + ", " + liker['name']
-    except UnicodeEncodeError:  # Weird symbols in Facebook name. Decoding possible? Replacing with squares?
-        print liker['id'] + ", " + "User has strange character in their name!"
-    finally:
-        num_likes += 1
-
-
+    
 post = post['likes']
-while True:
-    print ""
-    print post
-    after = post['paging']['cursors']['after']
-    print after
-    post = graph.get_object( POST_ID + "/likes", after = after, limit='500')
-    print post
-    likes_from_post = post['data']
-    if not likes_from_post:
-        print "End of list!"
-        print "There were {} likes!".format(num_likes)
-        break
-#     post = graph.get_object(post['likes']['paging']['next'])
-#     print post
-    for liker in likes_from_post:    
-        try:
-            print liker['id'] + ", " + liker['name']
-        except UnicodeEncodeError:
-            print liker['id'] + ", " + "User has strange character in their name!"
-        finally:
-            num_likes += 1
-
-# This prints the next 'paging' URL to follow.
-# NOTE: This can be used to make more API calls! 
-# print post['likes']['paging']['next']
-# 
-# newLikesFromPost = 
+after = ''
+with open('out.csv', 'wb') as csvfile:
+    csv_writer = csv.writer(csvfile, delimiter= ',', quotechar='|', quoting = csv.QUOTE_MINIMAL)
+    while True:
+        print ""
+        post = graph.get_object( POST_ID + "/likes", after = after, limit='500')
+        
+        # When the final list has been retrived, 'data' is empty, thus we can safely assume the end of a list.
+        if not post['data']:
+            print "End of list!"
+            print "There were {} likes!".format(num_likes)
+            break
+        after = post['paging']['cursors']['after'] # Set up 'after' for next time
+        print after
+        likes_from_post = post['data']
+        
+        for liker in likes_from_post:
+            try:
+                csv_writer.writerow(["{}".format(num_likes), liker['id'], liker['name']])
+            except UnicodeEncodeError:  # Weird symbols in Facebook name. Decoding possible? Replacing with squares?
+                print liker['id'] + ", " + "User has strange character in their name!"
+            finally:
+                num_likes += 1
