@@ -44,7 +44,7 @@ class Aggregator(object):
                          'H': int(time_ary[3]),
                          'M': int(time_ary[4]),
                          'S': int(time_ary[5])}
-            formatted_time = datetime.datetime(time_dict['Y'], time_dict['m'], time_dict['d'], time_dict['H'], time_dict['M'], time_dict['S']) + datetime.timedelta(hours = 4)
+            formatted_time = datetime.datetime(time_dict['Y'], time_dict['m'], time_dict['d'], time_dict['H'], time_dict['M'], time_dict['S']) + datetime.timedelta(hours=4)
             time_since_epoch = calendar.timegm(formatted_time.timetuple())
             return time_since_epoch
         except TypeError:

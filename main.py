@@ -1,4 +1,5 @@
 from post_aggregator import PageAggregator, PostAggregator
+from csv_handler import CsvHandler
 
 
 def switch_choice(choice):
@@ -29,7 +30,9 @@ def analyze_page_data():
 
 
 def analyze_post_data():
-    pass    
+    read = CsvHandler()
+    read.do_everything()
+
 
 menu_length = 4
 while True:
