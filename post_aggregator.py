@@ -45,8 +45,9 @@ class Aggregator(object):
                          'H': int(time_ary[3]),
                          'M': int(time_ary[4]),
                          'S': int(time_ary[5])}
-            formatted_time = datetime.datetime(time_dict['Y'], time_dict['m'], time_dict['d'], time_dict['H'], time_dict['M'], time_dict['S']) + datetime.timedelta(hours=4)
+            formatted_time = datetime.datetime(time_dict['Y'], time_dict['m'], time_dict['d'], time_dict['H'], time_dict['M'], time_dict['S']) + datetime.timedelta(hours=-4)
             time_since_epoch = calendar.timegm(formatted_time.timetuple())
+            print time_since_epoch
             return time_since_epoch
         except TypeError:
             print "TypeError: stop doing funky stuff with data structures"
@@ -79,7 +80,7 @@ class Aggregator(object):
         fb = datetime.datetime.strptime(fb, "%Y-%m-%dT%H:%M:%S+0000")
         print fb
         return fb
-        
+
     def grab_date_range(self):
         
         while True:
@@ -192,13 +193,13 @@ class PageAggregator(Aggregator):
                 To combat this, we can grab a URL from the request that we can funnel into our next request. 
             '''
             try:
-                page_posts = self.graph.get_object(id = self.fb_object_num + '/posts', limit = '250', date_format = "U", until = self.time_until, since = self.time_from, fields = 'id, created_time')
+                page_posts = self.graph.get_object(id = self.fb_object_num + '/posts', limit = '250', date_format = "U", until = self.time_until, fields = 'id, created_time')
                 time.sleep(1.30)
             except AttributeError: # No 'time from' or 'time until', start at the beginning
                 page_posts = self.graph.get_object(id = self.fb_object_num + '/posts', limit = '250', date_format = "U", fields = 'id, created_time')
                 time.sleep(1.30)
-                self.time_from = 0
-                self.time_until = 0
+                self.time_until = calendar.timegm(datetime.datetime.timetuple(datetime.datetime.utcnow()))
+                self.time_from = 1
             end_flag = False
             while not end_flag:
                 if not page_posts['data']:    # If an empty list is retrieved, we have hit the end of the list
@@ -207,9 +208,12 @@ class PageAggregator(Aggregator):
                 print data_from_posts
                 for post in data_from_posts:
                     try:
-                        if post['created_time'] < self.time_until:   # Facebook bug which erases functionality with since / until! :(
+                        if post['created_time'] < self.time_from:
                             end_flag = True
-                            break 
+                            break
+                        # if post['created_time'] > self.time_until or post['created_time'] < self.time_from:   # Facebook bug which erases functionality with since / until! :(
+                        #     end_flag = True
+                        #     break
                         csv_writer.writerow({'count': post_count, 'id': post['id'], 'time': datetime.datetime.fromtimestamp(post['created_time']).strftime('%Y-%m-%d %H:%M:%S')})
 #                         lp.crunch_post_and_write(post['id'], obj_name)
 #                         cp.crunch_post_and_write(post['id'], obj_name)

@@ -68,7 +68,7 @@ class LikeParser(FbParser):
             csv_writer.writeheader()
             while True:
                 try:
-                    post_object = graph.get_object(self.post_id + '/likes', limit = 500, after = self.next_page, fields="id, name")
+                    post_object = graph.get_object(self.post_id + '/likes', limit = 5000, after = self.next_page, fields="id, name")
                     time.sleep(1.30)
                 except KeyError:
                     print "No likes!"
