@@ -1,4 +1,5 @@
-from post_aggregator import PageAggregator, PostAggregator
+from post_aggregator import PostAggregator
+from page_aggregator import PageAggregator
 from csv_handler import CsvHandler
 
 

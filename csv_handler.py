@@ -1,4 +1,3 @@
-import contextlib
 import csv
 import subprocess
 import os
@@ -6,7 +5,7 @@ import datetime
 from facebook import get_app_access_token
 from fb_appinfo import FACEBOOK_SECRET_ID, FACEBOOK_APP_ID
 from post_aggregator import PostAggregator
-from post_info_parser import LikeParser, CommentParser
+from time_handler import TimeHandler
 
 __author__ = 'Brandon Connes'
 
@@ -70,7 +69,6 @@ class CsvHandler(object):
                 else:
                     print "That is not a file, please try again."
 
-    @staticmethod
     def generate_path(self, file_name):
         obj_type = None
         if 'likes' in str(file_name):
@@ -91,6 +89,8 @@ class CsvHandler(object):
             datetime.datetime.now().time().strftime("%H")), str(obj_type))
 
     def parse_posts(self, file_name):
+        time_handler = TimeHandler()
+        time_handler.grab_date_range()
         with open(file_name, 'rb') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
