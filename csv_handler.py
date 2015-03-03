@@ -6,6 +6,8 @@ from facebook import get_app_access_token
 from fb_appinfo import FACEBOOK_SECRET_ID, FACEBOOK_APP_ID
 from post_aggregator import PostAggregator
 from time_handler import TimeHandler
+import pandas as pd
+
 
 __author__ = 'Brandon Connes'
 
@@ -90,12 +92,19 @@ class CsvHandler(object):
 
     def parse_posts(self, file_name):
         time_handler = TimeHandler()
-        time_handler.grab_date_range()
+        time_handler.prompt_for_input()
+
         with open(file_name, 'rb') as csvfile:
             reader = csv.DictReader(csvfile)
+            time_from_ = time_handler.from_unixtime_to_csvtime(time_handler.time_from)
+            time_until_ = time_handler.from_unixtime_to_csvtime(time_handler.time_until)
             for row in reader:
-                self.posts.append(row['id'])
+                row_time_created = row['time']
+                if time_from_ <= row_time_created <= time_until_:
+                    self.posts.append(row['id'])
             pa = PostAggregator()
+            df = pd.DataFrame(data = self.posts, columns = ["IDs"])
+            print(df)
             for post in self.posts:
                 pa.multiple_inputs(post)
 
@@ -109,7 +118,7 @@ class CsvHandler(object):
                 else:
                     self.users[user_id] = 1
 
-        with open(self.generate_path(self, file_name), 'wb') as csvfile:
+        with open(self.generate_path(file_name), 'wb') as csvfile:
             field_names = ['id', 'count']
             writer = csv.DictWriter(csvfile, field_names)
             writer.writeheader()

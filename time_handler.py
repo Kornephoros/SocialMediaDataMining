@@ -1,17 +1,8 @@
 import calendar
 import datetime
+import time
 
 
-def from_unix_to_datettime(unix):
-    d = datetime.datetime.fromtimestamp(int(unix))
-    d = d.strftime("%Y-%m-%dT%H%M%S+0000")
-    return d
-
-
-def from_fbtime_to_datetime(fb):
-    fb = datetime.datetime.strptime(fb, "%Y-%m-%dT%H:%M:%S+0000")
-    print fb
-    return fb
 
 
 class TimeHandler:
@@ -82,7 +73,7 @@ class TimeHandler:
                 break
 
         while True:
-            self.datetime_from = from_unix_to_datettime(self.time_from)
+            self.datetime_from = self.from_unix_to_datettime(self.time_from)
             self.time_until = raw_input('Please enter the time you\'d like to gather until. Leave blank for "until now". \nThe format is: Y m d H M S\n')
             self.time_until = self.input_time(self.time_until)
             if self.time_until == -1:
@@ -92,3 +83,26 @@ class TimeHandler:
                 break
             else:
                 break
+
+    @staticmethod
+    def from_unix_to_datettime(unix):
+        d = datetime.datetime.fromtimestamp(int(unix))
+        d = d.strftime("%Y-%m-%dT%H%M%S+0000")
+        return d
+
+    @staticmethod
+    def from_fbtime_to_datetime(fb):
+        fb = datetime.datetime.strptime(fb, "%Y-%m-%dT%H:%M:%S+0000")
+        print fb
+        return fb
+
+    def from_unixtime_to_csvtime(self, unixtime):
+        converted = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(unixtime))
+        return converted
+
+    # def from_csvtime_to_unixtime(self, csv):
+    #     converted = datetime.datetime.
+    #     converted = calendar.timegm(datetime.date.strftime("%Y-%m-%d %H:%M:%S"))
+    #     unixtime = datetime.datetime.strptime(csv, "%Y-%m-%d %H:%M:%S")
+    #     print unixtime
+    #     return unixtime

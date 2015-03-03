@@ -20,7 +20,7 @@ class FbParser(object):
         self.obj_name = None
         self.url = None
         self.next_page = None
-        self.object_count = None
+        self.object_count = 0
 
     def set_post_id(self, post_id):
         self.post_id = post_id
@@ -28,7 +28,7 @@ class FbParser(object):
     # Reset common fields to 0
     def reset(self):
         self.next_page = None
-        self.object_count = None
+        self.object_count = 0
 
     # Generate the path to write to
     def generate_path(self, post_id, type_, multiple):
