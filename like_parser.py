@@ -5,7 +5,7 @@ import time
 from fb_appinfo import FACEBOOK_APP_ID
 from fb_appinfo import FACEBOOK_SECRET_ID
 from post_info_parser import FbParser
-import pandas as pd
+
 
 class LikeParser(FbParser):
 

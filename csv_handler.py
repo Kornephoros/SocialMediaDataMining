@@ -3,6 +3,7 @@ import subprocess
 import os
 import datetime
 from facebook import get_app_access_token
+from fb_analytics import Analytics
 from fb_appinfo import FACEBOOK_SECRET_ID, FACEBOOK_APP_ID
 from post_aggregator import PostAggregator
 from time_handler import TimeHandler
@@ -52,7 +53,8 @@ class CsvHandler(object):
             #try:
                 subprocess.call("dir /a:-d", shell=True)
                 print "\nPlease input the name of the file you would like to work with:"
-                print "Enter 'all' to use all of the files in the current directory."
+                print "Enter 'all' to use all of the files in the current directory,"
+                print "or enter 'analyze' to start data analytics."
                 file_name = raw_input()
                 if file_name == "quit":
                     quit_in = True
@@ -64,6 +66,11 @@ class CsvHandler(object):
                             continue  # Skip directories
                         else:
                             self.read_file(fname)
+                elif file_name == "analyze":
+                    print "Enter the name of the file you would like to analyze: "
+                    file_name = raw_input()
+                    ana = Analytics()
+                    ana.analyze(file_name)
                 elif os.path.isfile(file_name) and ("likes" in file_name or "comments" in file_name):
                     self.read_file(file_name)
                 elif os.path.isfile(file_name) and "posts" in file_name:
