@@ -31,8 +31,8 @@ class LikeParser(FbParser):
                             break
                         else:
                             post_object = graph.get_object(self.post_id + '/likes', limit = 5000, fields="id, name")
-                            break
                             time.sleep(1.30)
+                            break
                     except KeyError:
                             print "No likes!"
                             break
@@ -49,18 +49,19 @@ class LikeParser(FbParser):
                 except KeyError:
                     print "No 'after' paging detected. End of list?"
                 likes_from_post = post_object['data']
-                likes_p = pd.DataFrame(data = post_object['data'])
-                try:
-                    likes_p.to_csv('panda_output' + self.post_id +'.csv')
-                except UnicodeEncodeError:  # Weird symbols in FB Name.
-                    continue
-                finally:
-                    self.object_count += 1
-                # for liker in likes_from_post:
-                #     try:
-                #         csv_writer.writerow({'count': self.object_count, 'id': liker['id'], 'name': liker['name']})
-                #     except UnicodeEncodeError:  # Weird symbols in FB Name.
-                #         reformed_name = ''.join(i for i in liker['name'] if ord(i) < 128)
-                #         csv_writer.writerow({'count': self.object_count, 'id': liker['id'], 'name': reformed_name})
-                #     finally:
-                #         self.object_count += 1
+                # likes_p = pd.DataFrame(data = post_object['data'])
+                # try:
+                #     likes_p.to_csv('panda_output' + self.post_id +'.csv', encoding='utf-8')
+                # except UnicodeEncodeError:  # Weird symbols in FB Name.
+                #     likes_p = ''.join(i for i in likes_p if ord(i) < 128)
+                #     likes_p.to_csv('panda_output_e' + self.post_id+'.csv', encoding='utf-8')
+                # finally:
+                #     self.object_count += 1
+                for liker in likes_from_post:
+                    try:
+                        csv_writer.writerow({'count': self.object_count, 'id': liker['id'], 'name': liker['name']})
+                    except UnicodeEncodeError:  # Weird symbols in FB Name.
+                        reformed_name = ''.join(i for i in liker['name'] if ord(i) < 128)
+                        csv_writer.writerow({'count': self.object_count, 'id': liker['id'], 'name': reformed_name})
+                    finally:
+                        self.object_count += 1
