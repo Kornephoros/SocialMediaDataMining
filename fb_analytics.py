@@ -28,8 +28,9 @@ class Analytics():
         # This block creates a dataset of the counts within the csvfile passed.
         counts_only = ds['count']
         plt.figure(1)
-        plt.hist(counts_only, normed=1, histtype='bar', label='Frequency of '+type_of_file)
+        plt.hist(counts_only,  20, histtype='bar', label='Frequency of '+type_of_file)
         plt.title(type_of_file + ' for posts')
+        plt.axis([1, 2, 3,4 ,5 ,6, 7, 8, 9, 10])
         plt.legend()
         plt.show()
 
