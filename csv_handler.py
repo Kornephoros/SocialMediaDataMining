@@ -91,6 +91,23 @@ class CsvHandler(object):
                         else:
                             ana.determine_weight(fname)
                     ana.plot_weights()
+                elif file_name == "analyze p":
+                    ana = Analytics()
+                    basepath = "./"
+                    for fname in os.listdir(basepath):
+                        path = os.path.join(basepath, fname)
+                        if os.path.isdir(path):
+                            continue   # Skip directories
+                        else:
+                            ana.determine_posts(fname)
+                    ana.initialize_ratios()
+                    for fname in os.listdir(basepath):
+                        path = os.path.join(basepath, fname)
+                        if os.path.isdir(path):
+                            continue   # Skip directories
+                        else:
+                            ana.find_post_counts(fname)
+                    print ana.post_ratios
 
 
 

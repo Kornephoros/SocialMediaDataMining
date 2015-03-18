@@ -12,18 +12,22 @@ class Analytics():
         self.users = list()
         self.weight = list(tuple())
         self.count = 0
+
+        self.post_ratios = list()
         pass
 
-    def analyze(self, csvfile):
-        type_of_file = None
-        if 'likes' in csvfile:
-            type_of_file = 'likes'
-        elif 'comments' in csvfile:
-            type_of_file = 'comments'
-        elif 'posts' in csvfile:
-            type_of_file = 'posts'
+    def determine_type(self, file_name):
+        if "likes" in file_name:
+            return "likes"
+        elif "comments" in file_name:
+            return "comments"
+        elif "posts" in file_name:
+            return "posts"
         else:
-            type_of_file = 'bad'
+            return "bad"
+
+    def analyze(self, csvfile):
+        type_of_file = self.determine_type(csvfile)
         ds = pd.read_csv(csvfile)
         assert isinstance(ds, pd.DataFrame)
 #       print(ds)
@@ -99,15 +103,7 @@ class Analytics():
         regex = re.compile("([0-9])+_+([0-9])+")   # Gathers the post ID from a string Ex: 5556667231_32144112
         post_id = regex.match(file_name).group()
 
-        type = None
-        if "likes" in file_name:
-            type = "likes"
-        elif "comments" in file_name:
-            type = "comments"
-        elif "posts" in file_name:
-            type = "posts"
-        else:
-            type = "bad"
+        type = self.determine_type(file_name)
         with open(file_name, 'rb') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
@@ -131,3 +127,22 @@ class Analytics():
         plt.plot(self.weight, label='Weights')
         plt.show()
 #        plt_ = self.weight.plot()
+
+    def initialize_ratios(self):
+        self.post_ratios = pd.DataFrame(0, index = self.posts_to_analyze, columns = ["likes", "comments", "ratio", "total_impressions"])
+
+    def find_post_counts(self, file_name):
+        type = self.determine_type(file_name)
+        regex = re.compile("([0-9])+_+([0-9])+")   # Gathers the post ID from a string Ex: 5556667231_32144112
+        post_id = regex.match(file_name).group()
+        count = 0
+        with open(file_name, 'rb') as csvfile:
+            for i, l in enumerate(csvfile):
+                pass
+            count = i + 1
+        self.post_ratios.ix[post_id, type] = count
+
+    def calculate_ratios(self):
+        for index, row in self.post_ratios.iterrows():
+            num_likes = self.post_ratios[index, "likes"]
+            num_comments = self.post_ratios[index, "comments"]
