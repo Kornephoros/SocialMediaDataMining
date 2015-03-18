@@ -16,7 +16,7 @@ class LikeParser(FbParser):
         self.reset()
         self.obj_name = obj_name
         graph = facebook.GraphAPI(get_app_access_token(FACEBOOK_APP_ID, FACEBOOK_SECRET_ID))
-        time.sleep(1.30)
+        #time.sleep(1.30)
 
         field_names = ['count', 'id', 'name']
         with open(self.generate_path(self.post_id, "likes", multiple_flag), 'wb') as csvfile:
@@ -26,19 +26,19 @@ class LikeParser(FbParser):
                 while True:
                     try:
                         if self.next_page is not None:
-                            post_object = graph.get_object(self.post_id + '/likes', limit = 5000, after = self.next_page, fields="id, name")
-                            time.sleep(1.30)
+                            post_object = graph.get_object(self.post_id + '/likes', limit = 2500, after = self.next_page, fields="id, name")
+                            #time.sleep(1.30)
                             break
                         else:
-                            post_object = graph.get_object(self.post_id + '/likes', limit = 5000, fields="id, name")
-                            time.sleep(1.30)
+                            post_object = graph.get_object(self.post_id + '/likes', limit = 2500, fields="id, name")
+                            #time.sleep(1.30)
                             break
                     except KeyError:
                             print "No likes!"
                             break
                     except facebook.GraphAPIError:
-                            print "Facebook Timed Out, retrying after 15 seconds."
-                            time.sleep(15.0)
+                            print "Facebook Timed Out, retrying after 10 seconds."
+                            time.sleep(10.0)
                             continue
                 if not post_object['data']:
                     print "End of list for post " + self.post_id + "!"

@@ -98,7 +98,7 @@ class Aggregator(object):
                 self.fb_object_num = raw_input('Please enter the ' + type_ + ' ID: ')
                 try:
                     self.page_object = self.graph.get_object(self.fb_object_num)
-                    time.sleep(1.30)
+                    #time.sleep(1.30)
                     break
                 except facebook.GraphAPIError:
                     print "The " + type_ + " you requested does not exist. Please try again.\n"

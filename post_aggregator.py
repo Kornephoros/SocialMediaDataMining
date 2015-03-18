@@ -37,7 +37,7 @@ class PostAggregator(Aggregator):
 
     def multiple_inputs(self, post_id):
         self.page_object = self.graph.get_object(post_id)
-        time.sleep(1.30)
+        #time.sleep(1.30)
         self.grab_info_from_page()
         self.grab_data("likes", True)
         self.grab_data("comments", True)

@@ -52,10 +52,10 @@ class PageAggregator(Aggregator):
             '''
             if self.time_handler.time_until is not None:
                     page_posts = self.graph.get_object(id = self.fb_object_num + '/posts', limit = '250', date_format = "U", until = self.time_handler.time_until, fields = 'id, created_time')
-                    time.sleep(1.30)
+                    #time.sleep(1.30)
             else: # No 'time from' or 'time until', start at the beginning
                 page_posts = self.graph.get_object(id = self.fb_object_num + '/posts', limit = '250', date_format = "U", fields = 'id, created_time')
-                time.sleep(1.30)
+                #time.sleep(1.30)
                 self.time_handler.time_until = calendar.timegm(datetime.datetime.timetuple(datetime.datetime.utcnow()))
                 self.time_handler.time_from = 1
             end_flag = False

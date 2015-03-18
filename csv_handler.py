@@ -71,6 +71,29 @@ class CsvHandler(object):
                     file_name = raw_input()
                     ana = Analytics()
                     ana.analyze(file_name)
+                elif file_name == "analyze a":
+                    ana = Analytics()
+                    ana.initialize_weights()
+                    basepath = "./"
+                    for fname in os.listdir(basepath):
+                        path = os.path.join(basepath, fname)
+                        if os.path.isdir(path):
+                            continue   # Skip directories
+                        else:
+                            ana.determine_posts(fname)
+                            ana.determine_users(fname)
+                    print ana.initialize_weights()
+
+                    for fname in os.listdir(basepath):
+                        path = os.path.join(basepath, fname)
+                        if os.path.isdir(path):
+                            continue   # Skip directories
+                        else:
+                            ana.determine_weight(fname)
+                    ana.plot_weights()
+
+
+
                 elif os.path.isfile(file_name) and ("likes" in file_name or "comments" in file_name):
                     self.read_file(file_name)
                 elif os.path.isfile(file_name) and "posts" in file_name:
@@ -131,3 +154,18 @@ class CsvHandler(object):
             writer.writeheader()
             for id_, count in self.users.iteritems():
                 writer.writerow({'id': id_, 'count': count})
+
+    def merge_files(self, *args):
+        with open("MERGED.csv", 'wb') as csvfile:
+            writer = csv.DictWriter(csvfile)
+            users_and_impressions = dict()
+            for file_name in args:
+                with open(file_name, 'rb') as csv_read:
+                    reader = csv.DictReader()
+                    for row in reader:
+                        user_id = row['id']
+                        if user_id in users_and_impressions:
+                            users_and_impressions['userid']
+                        else:
+                            self.users[user_id] = 1
+                        print file_name
