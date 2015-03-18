@@ -24,16 +24,29 @@ class Analytics():
         #ds = ds['count'].cumsum()
 
 #        plt.plot(ds, 'ro')
-
+        plt.interactive(False)
         # This block creates a dataset of the counts within the csvfile passed.
         counts_only = ds['count']
-        plt.figure(1)
-        plt.hist(counts_only,  20, histtype='bar', label='Frequency of '+type_of_file)
-        plt.title(type_of_file + ' for posts')
-        plt.axis([1, 2, 3,4 ,5 ,6, 7, 8, 9, 10])
-        plt.legend()
-        plt.show()
+        with plt.xkcd():
+            plt.figure(1)
+            plt_ret = plt.hist(counts_only, label='Frequency of '+type_of_file, range=(1, 22), bins=21)
+            print plt_ret[0]
+            print plt_ret[1]
+            plt.clf()
+            plt.bar(plt_ret[1][1:-1] - 0.4, plt_ret[0][1:])
+            plt.xticks(np.arange(22))
+            plt.title(type_of_file + ' for posts')
+            plt.legend()
+            plt.show()
 
+
+        print ds
+        # greater_than_one = ds[ds['count'] > 1]
+        # plt.figure(2)
+        # plt.hist(counts_only[counts_only > 1], histtype='bar', label='Frequency of '+type_of_file)
+        # plt.title(type_of_file + ' for posts > 1')
+        # plt.legend()
+        # plt.show()
 
 
         # plt.figure()
