@@ -108,6 +108,8 @@ class CsvHandler(object):
                         else:
                             ana.find_post_counts(fname)
                     print ana.post_ratios
+                    ana.calculate_ratios()
+                    print ana.post_ratios
 
 
 

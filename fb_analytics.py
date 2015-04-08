@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import re
+import scipy.sparse as sparse
 
 
 class Analytics():
@@ -96,7 +97,7 @@ class Analytics():
         print self.count
 
     def initialize_weights(self):
-        size_of_matr = (self.users.__len__(), self.posts_to_analyze.__len__())
+        self.sparse_weight = sparse.coo_matrix((self.users, self.posts_to_analyze))
         self.weight = pd.DataFrame(0, index = self.users, columns = self.posts_to_analyze) # Creates a DataFrame of size [users X posts] and fills with 0s
 
     def determine_weight(self, file_name):
@@ -146,3 +147,5 @@ class Analytics():
         for index, row in self.post_ratios.iterrows():
             num_likes = self.post_ratios[index, "likes"]
             num_comments = self.post_ratios[index, "comments"]
+            self.post_ratios.ix[index, "total_impressions"] = num_likes + num_comments
+            self.post_ratios.ix[index, "ratio"] = num_likes / num_comments
