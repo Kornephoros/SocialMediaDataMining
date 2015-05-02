@@ -9,8 +9,6 @@ def switch_choice(choice):
     elif choice == 2:
         collect_post_data()
     elif choice == 3:
-        analyze_page_data()
-    elif choice == 4:
         analyze_post_data()
     else:
         "You have not entered anything from the menu."
@@ -25,23 +23,17 @@ def collect_post_data():
     agg = PostAggregator()
     agg.do_everything()
 
-
-def analyze_page_data():
-    pass
-
-
 def analyze_post_data():
     read = CsvHandler()
     read.do_everything()
 
 
-menu_length = 4
+menu_length = 3
 while True:
     print "Welcome! Please select what you would like to do:"
     print "1. Collect posts from a Facebook Page of your choice"
     print "2. Collect data from a Facebook Post of your choice"
-    print "3. Analyze data that you have collected from a Facebook Page"
-    print "4. Analyze data that you have collected from a Facebook Post"
+    print "3. Analyze data that you have collected from a Facebook Post"
     try:
         choice = input()
         if choice > menu_length or choice == '' or choice < 1:

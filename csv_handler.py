@@ -10,15 +10,18 @@ from time_handler import TimeHandler
 import pandas as pd
 
 
-__author__ = 'Brandon Connes'
-
-
+# Simple Chdir class for navigating directories.
 class Chdir:
     def __init__(self, new_path):
         self.saved_path = os.getcwd()
         os.chdir(new_path)
 
+'''
+    The CSV Handler will prompt the user about navigating through directories until they are at the
+    place they would like to be for data analytics.
 
+    It can analyze _posts.csv, _likes.csv, _comments.csv, or all of the above.
+'''
 class CsvHandler(object):
     initial_path = "./data"
 
@@ -36,7 +39,7 @@ class CsvHandler(object):
         newline = False
         quit_in = False
         while not newline and not quit_in:
-            subprocess.call("dir /d", shell=True)
+            subprocess.call("dir /d", shell=True)  # List the directory
             print "\nPlease enter the directory you would like to navigate to."
             print "If you have arrived at the directory you would like to read from, just press Enter."
             new_dir = raw_input()
@@ -49,30 +52,32 @@ class CsvHandler(object):
                     print "Directory does not exist. Please try again."
             else:
                 newline = True
-        while not quit_in:
+        while not quit_in: # While the user has not entered 'quit'
             #try:
-                subprocess.call("dir /a:-d", shell=True)
+                subprocess.call("dir /a:-d", shell=True)  # List the current directory.
                 print "\nPlease input the name of the file you would like to work with:"
                 print "Enter 'all' to use all of the files in the current directory,"
                 print "or enter 'analyze' to start data analytics."
+                print "'analyze a' will analyze all of the posts within a directory."
+                print "'analyze p' will analyze the posts and print out ratio information."
                 file_name = raw_input()
                 if file_name == "quit":
                     quit_in = True
-                elif file_name == "all":
-                    basepath = "./"
+                elif file_name == "all": # If user enters 'all', attempt to use all of the files in the directory.
+                    basepath = "./"      # This is intended to be used with comment & like CSVs.
                     for fname in os.listdir(basepath):
                         path = os.path.join(basepath, fname)
                         if os.path.isdir(path):
                             continue  # Skip directories
                         else:
                             self.read_file(fname)
-                elif file_name == "analyze":
+                elif file_name == "analyze":  # 'analyze' will analyze the file entered. This should be used for plotting a single file's contents.
                     print "Enter the name of the file you would like to analyze: "
                     file_name = raw_input()
                     ana = Analytics()
                     ana.analyze(file_name)
-                elif file_name == "analyze a":
-                    ana = Analytics()
+                elif file_name == "analyze a": # 'analyze a' will analyze all of the posts within a directory. It will
+                    ana = Analytics()          # generate and plot weights based on likes / comments
                     ana.initialize_weights()
                     basepath = "./"
                     for fname in os.listdir(basepath):
@@ -90,9 +95,9 @@ class CsvHandler(object):
                             continue   # Skip directories
                         else:
                             ana.determine_weight(fname)
-                    ana.plot_weights()
-                elif file_name == "analyze p":
-                    ana = Analytics()
+                    ana.write_to_matrix()
+                elif file_name == "analyze p":  # Analyze p will analyze post data in this directory. It will print out
+                    ana = Analytics()           # ratios of likes and comments.
                     basepath = "./"
                     for fname in os.listdir(basepath):
                         path = os.path.join(basepath, fname)
@@ -113,13 +118,14 @@ class CsvHandler(object):
 
 
 
-                elif os.path.isfile(file_name) and ("likes" in file_name or "comments" in file_name):
+                elif os.path.isfile(file_name) and ("likes" in file_name or "comments" in file_name): # If it is a file with likes/comments, read & parse those likes/comments
                     self.read_file(file_name)
-                elif os.path.isfile(file_name) and "posts" in file_name:
+                elif os.path.isfile(file_name) and "posts" in file_name: # Read/parse posts
                     self.parse_posts(file_name)
                 else:
                     print "That is not a file, please try again."
 
+    # Generating a path for storing CSV files as called by read_file.
     def generate_path(self, file_name):
         obj_type = None
         if 'likes' in str(file_name):
@@ -139,6 +145,8 @@ class CsvHandler(object):
         return path + "{0}_{1}.csv".format(str(
             datetime.datetime.now().time().strftime("%H")), str(obj_type))
 
+    # Parse through a _posts file by prompting for time input and reading every row. It will then aggregate
+    # information about those posts.
     def parse_posts(self, file_name):
         time_handler = TimeHandler()
         time_handler.prompt_for_input()
@@ -157,6 +165,8 @@ class CsvHandler(object):
             for post in self.posts:
                 pa.multiple_inputs(post)
 
+    # This function will gather information from a single file and then write the information to a CSV file.
+    # It gathers user IDs and the amount of impressions they have made.
     def read_file(self, file_name):
         with open(file_name, 'rb') as csvfile:
             reader = csv.DictReader(csvfile)
@@ -174,6 +184,8 @@ class CsvHandler(object):
             for id_, count in self.users.iteritems():
                 writer.writerow({'id': id_, 'count': count})
 
+    # merge files will write to a file by merging the files passed to it together.
+    # I'm not sure if this is used anywhere?
     def merge_files(self, *args):
         with open("MERGED.csv", 'wb') as csvfile:
             writer = csv.DictWriter(csvfile)

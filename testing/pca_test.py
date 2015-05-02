@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 
-pca_df = pd.read_csv('./pca_input_2d.csv')
-pca_T = np.vstack((pca_df['x'], pca_df['y'])).T
+pca_df = pd.read_csv('../data/parsed/results/DataFrameProto.csv')
+pca_T = pca_df.T
 
-x = pca_df['x']
-y = pca_df['y']
+x = pca_df[0]
+y = pca_df[1]
 
 mean_x = np.mean(x)
 mean_y = np.mean(y)

@@ -20,6 +20,9 @@ class TimeHandler:
 
         if date_range == 'y':
             self.grab_date_range()
+        if date_range == 'n':
+            self.time_until = datetime.datetime.now().strftime('%s')
+            self.time_from = 0
 
     def input_time(self, input_):
         while True:

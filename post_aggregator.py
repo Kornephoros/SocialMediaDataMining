@@ -51,6 +51,7 @@ class PostAggregator(Aggregator):
         data = json.loads(response.read())
         return data
 
+    # This will grab information from a post. If the data set is consistent, then these fields would be very useful.
     def grab_info_from_page(self):
         try:
             self.obj_name = self.page_object['from']['name']

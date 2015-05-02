@@ -28,6 +28,7 @@ class PageAggregator(Aggregator):
         data = json.loads(response.read())
         return data
 
+    # This function will grab information from the page object. Could be used for further analysis if desired.
     def grab_info_from_page(self):
         try:
             self.obj_name = self.page_object['name']
@@ -38,7 +39,8 @@ class PageAggregator(Aggregator):
             self.obj_type = self.page_object['category']
         except KeyError:
             self.obj_type = 'Could not determine page category.'
-        
+
+    # Grab information from a page.
     def grab_data(self):
         with open(self.generate_path("posts"), 'wb') as csv_file:
             field_names = ['count', 'id', 'time']
