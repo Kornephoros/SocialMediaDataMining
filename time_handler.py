@@ -4,12 +4,16 @@ import time
 
 
 
-
+'''
+    The time handler takes care of all of the messy time format swaps that had to occur. Should be cleaned up
+    in the future, but works as expected.
+'''
 class TimeHandler:
     def __init__(self):
         self.time_from = None
         self.time_until = None
 
+    # Prompts the user for input about time.
     def prompt_for_input(self):
         while True:
                 date_range = raw_input("Would you like to specify a date range? y/n  ")
@@ -24,6 +28,7 @@ class TimeHandler:
             self.time_until = datetime.datetime.now().strftime('%s')
             self.time_from = 0
 
+    # grabs input from the user.
     def input_time(self, input_):
         while True:
             input_ = self.create_time(input_)
@@ -35,6 +40,7 @@ class TimeHandler:
                 break
         return input_
 
+    # Will create time based on user input in epoch time.
     @staticmethod
     def create_time(time_in):
         try:
@@ -61,6 +67,7 @@ class TimeHandler:
             print "ValueError: times must not be out of conventional bounds"
             return -1
 
+    # Will grab date range from user
     def grab_date_range(self):
 
         while True:
@@ -87,25 +94,21 @@ class TimeHandler:
             else:
                 break
 
+    # converts from unixtime to datettime.
     @staticmethod
     def from_unix_to_datettime(unix):
         d = datetime.datetime.fromtimestamp(int(unix))
         d = d.strftime("%Y-%m-%dT%H%M%S+0000")
         return d
 
+    # converts from fbtime (bad) to datetime (good)
     @staticmethod
     def from_fbtime_to_datetime(fb):
         fb = datetime.datetime.strptime(fb, "%Y-%m-%dT%H:%M:%S+0000")
         print fb
         return fb
 
+    # converts from unixttime to pretty csvtime.
     def from_unixtime_to_csvtime(self, unixtime):
         converted = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(unixtime))
         return converted
-
-    # def from_csvtime_to_unixtime(self, csv):
-    #     converted = datetime.datetime.
-    #     converted = calendar.timegm(datetime.date.strftime("%Y-%m-%d %H:%M:%S"))
-    #     unixtime = datetime.datetime.strptime(csv, "%Y-%m-%d %H:%M:%S")
-    #     print unixtime
-    #     return unixtime
